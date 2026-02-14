@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'org.projects'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Core
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Swagger / OpenAPI UI
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0"
+
+    // Database
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Utilities
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // ── Test dependencies ──────────────────────────────────────────────────
+
+    // Core: JUnit 5, AssertJ, Mockito, Hamcrest, JSONPath, MockMvc
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // MockMvc + @AutoConfigureMockMvc support
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework:spring-test'
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+
+    // H2 must be testImplementation (not runtimeOnly) for @SpringBootTest
+    testImplementation 'com.h2database:h2'
+
+    // Lombok in tests
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // Gradle 9+ requires these to be declared explicitly —
+    // no longer auto-provided by the test executor
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+}
+
+test {
+    useJUnitPlatform()
+}

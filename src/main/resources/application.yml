@@ -1,0 +1,82 @@
+spring:
+  application:
+    name: url-shortener
+
+  datasource:
+    url: jdbc:h2:mem:urlshortenerdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+server:
+  port: 8080
+
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+  short-code-length: 6
+  default-expiry-days: 30
+
+# ── Swagger UI → http://localhost:8080/swagger-ui/index.html ─────────────────
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html        # redirects to /swagger-ui/index.html automatically
+    try-it-out-enabled: true
+    display-request-duration: true
+    doc-expansion: list
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  show-actuator: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: URL Shortener API
+    version: 1.0.0
+    description: A production-style REST API for shortening URLs
+
+---
+# PostgreSQL profile — activated via docker compose
+spring:
+  config:
+    activate:
+      on-profile: postgres
+
+  datasource:
+    url: jdbc:postgresql://db:5432/urlshortener
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: false
